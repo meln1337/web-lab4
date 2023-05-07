@@ -1,4 +1,31 @@
+import { useState, useEffect } from "react"
+
 const SignUp = () => {
+	const validateEmail = (email) => {
+        return /\S+@\S+\.\S+/.test(email);
+    }
+
+	const [form, setForm] = useState({
+		username: "",
+		password: "",
+		place_id: null,
+		email: ""
+	})
+
+	const [valid, setValid] = useState({
+		username: false,
+		password: false,
+		place_id: false,
+		email: false
+	})
+
+	const [focused, setFocused] = useState({
+		username: false,
+		password: false,
+		place_id: false,
+		email: false
+	})
+
 	const sign_up = () => {
 		let username = document.getElementsByClassName("sign-up-username")[0].value
 		let password = document.getElementsByClassName("sign-up-password")[0].value
@@ -30,6 +57,61 @@ const SignUp = () => {
 			.then(data => console.log(data))
 	}
 
+	const onFocus = e => {
+		setFocused({...focused, [e.target.alt]: true})
+		console.log(e.target.alt)
+		console.log("focused", focused)
+	}
+
+	const onInput = e => {
+		setForm({...form, [e.target.alt]: e.target.value})
+	}
+
+	useEffect(() => {
+		console.log(`length username: ${form.username.length}, length password: ${form.password.length}`)
+		console.log("form", form)
+		
+
+		if (form.username.length != 0) {
+			// setValid({...valid, "username": true})
+			setValid({...valid, username: true,
+			})
+			console.log('here 1')
+		}
+		else {
+			// setValid({...valid, "username": false})
+			setValid({
+				...valid, username: false
+			})
+			console.log('here 2')
+		}
+
+		if (form.password.length >= 8) {
+			setValid({...valid, password: true})
+			console.log('here 3')
+		}
+		else {
+			setValid({...valid, password: false})
+			console.log('here 4')
+		}
+
+		if (validateEmail(form.email)) {
+			setValid({...valid, email: true})
+		}
+		else {
+			setValid({...valid, email: false})
+		}
+
+		if (form.place_id != null) {
+			setValid({...valid, place_id: true})
+		}
+		else {
+			setValid({...valid, place_id: false})
+		}
+
+		console.log("valid", valid)
+	}, [form.username, form.password, form.email, form.place_id])
+
 
     return (
         <div className="container">
@@ -37,22 +119,27 @@ const SignUp = () => {
 		<form>
 			<div className="form-group">
 				<label>Email address</label>
-				<input type="email" className="input sign-up-email" placeholder="Enter email" />
-				<small id="emailHelp" className="never-share">We'll never share your email with anyone else.</small>
+				<input alt="email" onInput={onInput} onFocus={onFocus} type="email" className="input sign-up-email" placeholder="Enter email" />
+				{/* <small id="emailHelp" className="never-share">We'll never share your email with anyone else.</small> */}
+				{(focused.email && !(validateEmail(form.email))) && <small>You typed the wrong email</small>}
+
 			</div>
 			<div className="form-group">
 				<label>Username</label>
-				<input type="text" className="input sign-up-username" placeholder="Enter username" />
+				<input alt="username" onInput={onInput} onFocus={onFocus} type="text" className="input sign-up-username" placeholder="Enter username" />
+				{(focused.username && !form.username) && <small>Username can't be empty</small>}
 			</div>
 			<div className="form-group">
 				<label>Password</label>
-				<input type="password" className="input sign-up-password" placeholder="Password" />
+				<input alt="password" onInput={onInput} onFocus={onFocus} type="password" className="input sign-up-password" placeholder="Password" />
+				{(focused.password && !(form.password.length >= 8)) && <small>Password length must be greater than 7</small>}
 			</div>
 			<div className="form-group">
 				<label>Place id</label>
-				<input type="number" className="input sign-up-place-id" placeholder="Place id" />
+				<input alt="place_id" onInput={onInput} onFocus={onFocus} type="number" className="input sign-up-place-id" placeholder="Place id" />
+				{(focused.place_id && !(form.place_id != null)) && <small>Place id must be specified</small>}
 			</div>
-			<button onClick={sign_up} type="reset" className="btn submit sign-up-submit">Submit</button>
+			<button disabled={(!form.username || !(form.password.length >= 8) || !(validateEmail(form.email)) || !(form.place_id != null)) ? true : false} onClick={sign_up} type="reset" className={(!form.username || !(form.password.length >= 8) || !(validateEmail(form.email)) || !(form.place_id != null)) ? "btn submit sign-in-submit disabled" : "btn submit sign-in-submit"}>Submit</button>
 		</form>
 	</div>
     )

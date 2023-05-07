@@ -19,9 +19,11 @@ const Users = () => {
             {users.map((user, idx) => {
                 return (
                     <div className="ad public-ad">
-                        <h4>username: {user.username}</h4>
+                        <p>username: {user.username}</p>
                         <p>user id: {user.id}</p>
                         <p>email: {user.email}</p>
+                        <p>id: {user.id}</p>
+                        <p>place_id: {user.place_id}</p>
                     </div>
                 )
             })}

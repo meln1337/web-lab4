@@ -216,3 +216,8 @@ h2 {
 .nav-item a.nav-link-active {
   color: black;
 }
+
+.disabled {
+  cursor: default;
+  background-color: gray;
+}

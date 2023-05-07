@@ -28,7 +28,8 @@ const Places = () => {
 				<div className="places">
 					{!loading && places.map((place, idx) => (
 						<div className="ad public-ad" key={idx}>
-							<h4>{place.name}</h4>
+							<p>Name: {place.name}</p>
+							<p>Id: {place.id}</p>
 						</div>
 					))}
 					{loading && <h4>Loading...</h4>}

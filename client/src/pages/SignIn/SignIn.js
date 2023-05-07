@@ -1,4 +1,62 @@
+import { useState, useEffect } from "react"
+
 const SignIn = () => {
+	const [form, setForm] = useState({
+		username: "",
+		password: ""
+	})
+
+	const [valid, setValid] = useState({
+		username: false,
+		password: false
+	})
+
+	const [focused, setFocused] = useState({
+		username: false,
+		password: false
+	})
+
+	const onFocus = e => {
+		setFocused({...focused, [e.target.alt]: true})
+		console.log(e.target.alt)
+		console.log("focused", focused)
+	}
+
+	const onInput = e => {
+		setForm({...form, [e.target.alt]: e.target.value})
+	}
+
+	useEffect(() => {
+		console.log(`length username: ${form.username.length}, length password: ${form.password.length}`)
+		console.log("form", form)
+		
+
+		if (form.username.length != 0) {
+			// setValid({...valid, "username": true})
+			setValid({...valid, username: true,
+			})
+			console.log('here 1')
+		}
+		else {
+			// setValid({...valid, "username": false})
+			setValid({
+				...valid, username: false
+			})
+			console.log('here 2')
+		}
+
+		if (form.password.length >= 8) {
+			setValid({...valid, password: true})
+			console.log('here 3')
+		}
+		else {
+			setValid({...valid, password: false})
+			console.log('here 4')
+		}
+
+		console.log("valid", valid)
+	}, [form.username, form.password])
+
 	const sign_in = () => {
 		let sign_in = document.getElementsByClassName("sign-in-checkbox")[0].checked
 		let username = document.getElementsByClassName("sign-in-username")[0].value
@@ -41,17 +99,34 @@ const SignIn = () => {
 		<form>
 			<div className="form-group">
 				<label>Username</label>
-				<input type="text" className="input sign-in-username" placeholder="Enter username" />
+				<input onInput={onInput} 
+						alt="username" 
+						onFocus={onFocus} 
+						type="text" 
+						className="input sign-in-username" 
+						placeholder="Enter username" 
+						value={form.username}
+				/>
+				{(focused.username && !form.username) && <small>Username can't be empty</small>}
 			</div>
 			<div className="form-group">
 				<label>Password</label>
-				<input type="password" className="input sign-in-password" placeholder="Password" />
+				<input onInput={onInput} 
+						alt="password" 
+						onFocus={onFocus} 
+						content="password" 
+						type="password" 
+						className="input sign-in-password" 
+						placeholder="Password"
+						value={form.password} 
+				/>
+				{(focused.password && !valid.password) && <small>Password length must be greater than 7</small>}
 			</div>
 			<div className="check">
 				<input type="checkbox" className="form-check-input sign-in-checkbox" />
 				<label>Check me out</label>
 			</div>
-			<button onClick={sign_in} type="reset" className="btn submit sign-in-submit">Submit</button>
+			<button disabled={(!form.username || !valid.password) ? true : false} onClick={sign_in} type="reset" className={(!form.username || !valid.password) ? "btn submit sign-in-submit disabled" : "btn submit sign-in-submit"}>Submit</button>
 		</form>
 	</div>
     )

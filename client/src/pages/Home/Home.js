@@ -4,9 +4,14 @@ import {Link} from 'react-router-dom'
 const Home = () => {
     const [ads, setAds] = useState([])
     const [loading, setLoading] = useState(true)
+    const [authorization_header, setAuthorization_header] = useState(localStorage.getItem("Authorization"))
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/advertisement")
+        fetch("http://127.0.0.1:5000/advertisement", {
+            headers: {
+                "Authorization": authorization_header
+            }
+        })
             .then(response => {
                 console.log(response)
                 return response.json()
@@ -27,10 +32,9 @@ const Home = () => {
                 </div>
                 <div className="ads">
                         {!loading && ads.map((ad, idx) => (
-                            <div className="ad public-ad">
-                                <h4>Ad {idx+1}</h4>
-                                <small>Author: {ad.author}</small>
-                                <p>{ad.text}</p>
+                            <div className={ad.type_id == 1 ? "ad public-ad" : "ad private-ad"}>
+                                <small>Author_id: {ad.author_id}</small>
+                                <p>Text: {ad.text}</p>
                                 <small>Type: {ad.type_id == 1 ? "Public" : "Private"}</small>
                             </div>
                         ))}

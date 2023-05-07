@@ -181,7 +181,8 @@ def place():
 def advertisement_get(auth_user):
     if req.method == "GET":
         if auth_user is None:
-            ads = s.query(Advertisement).filter(Advertisement.type_id == 2).all()
+            print('user is none')
+            ads = s.query(Advertisement).filter(Advertisement.type_id == 1).all()
             data = unserialize(ads, ["id", "text", "type_id", "place_id", "author_id"])
             return Response(json.dumps(data), status=200, mimetype="application/json")
 
@@ -191,7 +192,8 @@ def advertisement_get(auth_user):
             data = unserialize(ads, ["id", "text", "type_id", "place_id", "author_id"])
             return Response(json.dumps(data), status=200, mimetype="application/json")
 
-        ads = s.query(Advertisement).filter((Advertisement.type_id == 2) | (Advertisement.place_id == auth_user.place_id))
+        print(auth_user.place_id)
+        ads = s.query(Advertisement).filter((Advertisement.type_id == 1) | (Advertisement.place_id == auth_user.place_id)).all()
         data = unserialize(ads, ["id", "text", "type_id", "place_id", "author_id"])
         return Response(json.dumps(data), status=200, mimetype="application/json")
 
